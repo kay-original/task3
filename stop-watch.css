@@ -1,0 +1,23 @@
+.stopwatch-body{
+  text-align: center;
+  padding: 50px;
+}
+#time{
+  font-family: Lato;
+  font-size: 45px;
+  margin-bottom: 30px;
+}
+.btn{
+  font-family: Lato;
+  font-size: 18px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border: solid 1px black;
+  padding: 5px 8px;
+  border-radius: 10px;
+  background-color: #00ced1;
+  cursor: pointer;
+}
+.inactive{
+  opacity: 0;
+}
