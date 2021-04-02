@@ -3,78 +3,48 @@ const time = document.getElementById('time');
 const start = document.getElementById('start');
 const stop = document.getElementById('stop');
 const reset = document.getElementById('reset');
-
-let startMs;
+let runtime = 0;
 let timeoutId;
-let runtime= 0;
-function countUp() {
-  const d = new Date(Date.now() - startMs + runtime);
-  const m = String(d.getMinutes()).padStart(2, '0');
-  const s = String(d.getSeconds()).padStart(2, '0');
-  const ms = String(d.getMilliseconds()).padStart(3, '0');
+
+function startState(){
+  start.disabled= true;
+  runtime++;
   
-  time.textContent = `${m}:${s}:${ms}`;
+  let min = Math.floor(runtime / 100 / 60);
+  let sec = Math.floor(runtime / 100);
+  let ms = Math.floor(runtime) % 100;
   
-  timeoutId = setTimeout(()=>{
-    countUp();
-  },10);
-}
-start.addEventListener('click', ()=>{
-  startMs = Date.now();
-  countUp();
-});
+  if (min < 10){
+    min = '0'+min;
+  }
+  if (sec >= 60){
+    sec = sec % 60;
+  }
+  if (sec < 10){
+    sec = '0'+sec;
+  }
+  if (ms < 10){
+    ms = '0'+ms;
+  }
+  
+  time.innerHTML = min + ":" + sec +"." + ms;
 
-stop.addEventListener('click', ()=>{
+  timeoutId = setTimeout(startState,10);
+}
+  
+function stopState(){
   clearTimeout(timeoutId);
-  runtime += Date.now() - startMs;
-});
-
-reset.addEventListener('click', ()=>{
-  time.textContent = '00:00.000';
-  runtime = 0;
-});
-
-function buttonStateBase() {
-  start.classList.remove('inactive');
-  stop.classList.add('inactive');
-  reset.classList.add('inactive');
-}
-function buttonStateStart() {
-  start.classList.add('inactive');
-  stop.classList.remove('inactive');
-  reset.classList.add('inactive');
-}
-function buttonStateStop() {
-  start.classList.remove('inactive');
-  stop.classList.add('inactive');
-  reset.classList.remove('inactive');
+  start.disabled=false;
 }
 
-buttonStateBase();
-
-start.addEventListener('click', ()=>{
-  if (start.classList.contains('inactive')===true){
-    return;
-  }
-  buttonStateStart();
-  startMs = Date.now();
-  countUp();
-});
-
-stop.addEventListener('click', ()=>{
-  if (stop.classList.contains('inactive')===true){
-    return;
-  }
-  buttonStateStop();
+function resetState(){
   clearTimeout(timeoutId);
-  runtime += Date.now() - startMs;
-});
-
-reset.addEventListener('click', ()=>{
-  if (reset.classList.contains('inactive')===true){
-    return;
-  }
-  buttonStateBase();
-  time.textContent = '00:00.000';
   runtime = 0;
-});
+  time.innerHTML = "00:00.00";
+  start.disabled=false;
+}
+
+start.addEventListener('click', startState); // STARTボタン
+stop.addEventListener('click', stopState); // STOPボタン
+reset.addEventListener('click', resetState); // RESETボタン
+
